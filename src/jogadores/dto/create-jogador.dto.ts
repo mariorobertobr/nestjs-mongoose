@@ -1,9 +1,21 @@
+import { IsEmail, IsNumber, IsString } from 'class-validator';
+
 export class CreateJogadorDto {
-  readonly _id: string;
-  readonly telefone: string;
-  readonly email: string;
-  nome: string;
+  @IsString()
+  telefoneCelular: string;
+
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  name: string;
+
+  @IsString()
   ranking: string;
+
+  @IsNumber()
   posicaoRanking: number;
-  urlFotoJogador: string;
+
+  @IsString()
+  urlFoto: string;
 }

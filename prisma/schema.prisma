@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Jogador {
+  id              String    @id @default(uuid()) @map("_id")
+  telefoneCelular String
+  email           String    @unique
+  name            String
+  ranking         String
+  posicaoRanking  Int
+  urlFoto         String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  Eventos         Eventos[]
+
+  @@map("jogadores")
+}
+
+model Categoria {
+  categoria String    @id @map("_id")
+  eventos   Eventos[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("categorias")
+}
+
+model Eventos {
+  id          String     @id @default(uuid()) @map("_id")
+  nome        String
+  operacao    String
+  valor       Float
+  Categoria   Categoria? @relation(fields: [categoriaId], references: [categoria])
+  categoriaId String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  Jogador     Jogador?   @relation(fields: [jogadorId], references: [id])
+  jogadorId   String?
+
+  @@map("eventos")
+}

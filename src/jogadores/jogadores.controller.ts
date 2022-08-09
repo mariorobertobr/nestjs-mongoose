@@ -27,7 +27,7 @@ export class JogadoresController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.jogadoresService.findOne(+id);
+    return this.jogadoresService.findOne(id);
   }
 
   @Patch(':id')
@@ -35,11 +35,11 @@ export class JogadoresController {
     @Param('id') id: string,
     @Body() updateJogadoreDto: UpdateJogadoreDto,
   ) {
-    return this.jogadoresService.update(+id, updateJogadoreDto);
+    return this.jogadoresService.update(id, updateJogadoreDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.jogadoresService.remove(+id);
+    return this.jogadoresService.remove(id);
   }
 }
