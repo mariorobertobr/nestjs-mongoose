@@ -1,26 +1,84 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma.service';
 import { CreateEventoDto } from './dto/create-evento.dto';
 import { UpdateEventoDto } from './dto/update-evento.dto';
 
 @Injectable()
 export class EventosService {
-  create(createEventoDto: CreateEventoDto) {
-    return 'This action adds a new evento';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createEventoDto: CreateEventoDto) {
+    if (
+      !createEventoDto.nome ||
+      !createEventoDto.operacao ||
+      !createEventoDto.valor
+    ) {
+      throw new HttpException('Evento or descricao is empty', 400);
+    }
+
+    const createEvento = await this.prisma.eventos.create({
+      data: createEventoDto,
+    });
+
+    return createEvento;
   }
 
   findAll() {
-    return `This action returns all eventos`;
+    return this.prisma.eventos.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} evento`;
+  findOne(id: string) {
+    const evento = this.prisma.eventos.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!evento) {
+      throw new HttpException('Evento not found', 404);
+    }
+
+    return evento;
   }
 
-  update(id: number, updateEventoDto: UpdateEventoDto) {
-    return `This action updates a #${id} evento`;
+  update(id: string, updateEventoDto: UpdateEventoDto) {
+    const evento = this.prisma.eventos.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!evento) {
+      throw new HttpException('Evento not found', 404);
+    }
+
+    const updatedEvento = this.prisma.eventos.update({
+      where: {
+        id,
+      },
+      data: updateEventoDto,
+    });
+
+    return updatedEvento;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} evento`;
+  remove(id: string) {
+    const evento = this.prisma.eventos.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!evento) {
+      throw new HttpException('Evento not found', 404);
+    }
+
+    const deletedEvento = this.prisma.eventos.delete({
+      where: {
+        id,
+      },
+    });
+
+    return deletedEvento;
   }
 }

@@ -1,5 +1,4 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { ObjectID } from 'bson';
 import { PrismaService } from 'src/prisma.service';
 import { CreateJogadorDto } from './dto/create-jogador.dto';
 import { UpdateJogadoreDto } from './dto/update-jogadore.dto';

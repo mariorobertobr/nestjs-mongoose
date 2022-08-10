@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateCategoriaDto } from './dto/create-categoria.dto';
 import { UpdateCategoriaDto } from './dto/update-categoria.dto';
@@ -8,21 +8,15 @@ export class CategoriasService {
   constructor(readonly prisma: PrismaService) {}
 
   async create(createCategoriaDto: CreateCategoriaDto) {
-    const categoriaExists = await this.prisma.categoria.findUnique({
-      where: {
-        categoria: createCategoriaDto.categoria,
-      },
-    });
-
-    if (categoriaExists) {
-      throw new Error('Categoria already in use');
+    if (!createCategoriaDto.categoria || !createCategoriaDto.descricao) {
+      throw new HttpException('Categoria or descricao is empty', 400);
     }
 
-    const creaCategoria = await this.prisma.categoria.create({
+    const createCategoria = await this.prisma.categoria.create({
       data: createCategoriaDto,
     });
 
-    return creaCategoria;
+    return createCategoria;
   }
 
   async findAll() {
@@ -49,7 +43,7 @@ export class CategoriasService {
     });
 
     if (!categoriaName) {
-      throw new Error('Categoria not found');
+      throw new HttpException('Categoria not found', 404);
     }
 
     const updatedCategoria = await this.prisma.categoria.update({
@@ -70,7 +64,7 @@ export class CategoriasService {
     });
 
     if (!categoriaName) {
-      throw new Error('Categoria not found');
+      throw new HttpException('Categoria not found', 404);
     }
     return;
   }

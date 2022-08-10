@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { EventosService } from './eventos.service';
 import { CreateEventoDto } from './dto/create-evento.dto';
 import { UpdateEventoDto } from './dto/update-evento.dto';
@@ -19,16 +27,16 @@ export class EventosController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.eventosService.findOne(+id);
+    return this.eventosService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEventoDto: UpdateEventoDto) {
-    return this.eventosService.update(+id, updateEventoDto);
+    return this.eventosService.update(id, updateEventoDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.eventosService.remove(+id);
+    return this.eventosService.remove(id);
   }
 }
